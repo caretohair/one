@@ -17,8 +17,25 @@
         textarea { width: 100%; padding: 8px; box-sizing: border-box; }
         button#googleSignInBtn { background-color: #4285f4; color: white; border: none; cursor: pointer; }
         button#googleSignInBtn:hover { background-color: #357abd; }
-        button#signOutBtn { background-color: #dc3545; color: white; border: none; cursor: pointer; margin-top: 10px; }
-        button#signOutBtn:hover { background-color: #c82333; }
+
+        /* Style for the Sign-Out button */
+        #signOutBtn {
+            background-color: #6c757d; /* Subtle gray color */
+            color: white;
+            border: none;
+            cursor: pointer;
+            padding: 5px 10px; /* Smaller padding */
+            font-size: 12px; /* Smaller text */
+            border-radius: 3px; /* Rounded corners */
+            position: fixed; /* Fixed position */
+            top: 10px; /* 10px from top */
+            right: 10px; /* 10px from right */
+            display: none; /* Hidden by default */
+            z-index: 1000; /* Ensure it stays above other content */
+        }
+        #signOutBtn:hover {
+            background-color: #5a6268; /* Slightly darker on hover */
+        }
     </style>
 </head>
 <body>

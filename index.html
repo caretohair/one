@@ -3,52 +3,249 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hair Care Services</title>
+    <meta name="description" content="Book mobile hair care services in Hyderabad. Hair massage, wash, and oil treatments at your doorstep.">
+    <meta name="keywords" content="hair care, mobile hair services, hair massage, hair wash, Hyderabad">
+    <title>Mobile Hair Care Hyderabad</title>
+    <link rel="stylesheet" href="style.css">
     <style>
-        body { font-family: Arial, sans-serif; max-width: 600px; margin: 20px auto; }
-        .service-img { height: 150px; margin: 10px 0; }
+        /* Adding styles for the appointment form and auth section */
         .form-group { margin-bottom: 15px; }
         label { display: block; margin-bottom: 5px; }
-        input, select, button { width: 100%; padding: 8px; margin-bottom: 10px; }
+        input, select, button { width: 100%; padding: 8px; margin-bottom: 10px; box-sizing: border-box; }
+        #time-slot { display: none; margin-top: 10px; }
+        #auth-section { margin-bottom: 20px; }
+        textarea { width: 100%; padding: 8px; box-sizing: border-box; }
+        button#googleSignInBtn { background-color: #4285f4; color: white; border: none; cursor: pointer; }
+        button#googleSignInBtn:hover { background-color: #357abd; }
     </style>
 </head>
 <body>
-    <h1>Hair Care Services Appointment</h1>
-    
-    <!-- Placeholder for service images -->
-    <div id="service-images">
-        <p>Images for services (hair oil, head massage, total hair detox) will be added here.</p>
+    <header>
+        <img src="logo.png" alt="HairToCare-Logo" class="logo">
+        <p>Relaxing hair care services delivered to your doorstep at the best prices</p>
+    </header>
+    <nav>
+        <a href="#home">Home</a>
+        <a href="#services">Services</a>
+        <a href="#gallery">Gallery</a>
+        <a href="#book">Book Now</a>
+        <a href="#contact">Contact</a>
+    </nav>
+    <div class="container">
+        <section id="home">
+            <h2>Welcome to CareToHair Services</h2>
+            <p>Experience professional hair massage, wash, and oil treatments in the comfort of your Home.</p>
+        </section>
+        <section id="services">
+            <h2>Our Services</h2>
+            <div class="service-grid">
+                <div class="service-card">
+                    <h3>Hair Massage</h3>
+                    <p>Relaxing scalp massage to relieve stress.</p>
+                </div>
+                <div class="service-card">
+                    <h3>Hair Wash</h3>
+                    <p>Gentle wash with premium products.</p>
+                </div>
+                <div class="service-card">
+                    <h3>Hair Oil Application</h3>
+                    <p>Nourishing oil treatment for healthy hair.</p>
+                </div>
+            </div>
+        </section>
+        <section id="gallery">
+            <h2>Our Work</h2>
+            <div class="gallery-grid">
+                <img src="hair_massage.jpg" alt="Hair Massage">
+                <img src="hair_wash.jpg" alt="Hair Wash">
+                <img src="hair_oil.jpg" alt="Hair Oil Application">
+            </div>
+        </section>
+        <section id="book">
+            <h2>Book an Appointment</h2>
+            <!-- Authentication Section -->
+            <div id="auth-section">
+                <button id="googleSignInBtn">Sign In with Google</button>
+                <p id="userStatus">Not signed in</p>
+            </div>
+            <form id="booking-form">
+                <div class="form-group">
+                    <label for="name">Your Name:</label>
+                    <input type="text" id="name" name="name" placeholder="Your Name" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Your Email:</label>
+                    <input type="email" id="email" name="email" placeholder="Your Email" required>
+                </div>
+                <div class="form-group">
+                    <label for="phone">Your Phone Number:</label>
+                    <input type="tel" id="phone" name="phone" placeholder="Your Phone Number" required>
+                </div>
+                <div class="form-group">
+                    <label for="service">Select Service:</label>
+                    <select id="service" name="service" required>
+                        <option value="" disabled selected>Select Service</option>
+                        <option value="Hair Massage">Hair Massage</option>
+                        <option value="Hair Wash">Hair Wash</option>
+                        <option value="Hair Oil Application">Hair Oil Application</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="appointmentDate">Select Date:</label>
+                    <input type="date" id="appointmentDate" name="appointmentDate" min="2025-05-01" required>
+                </div>
+                <div class="form-group" id="time-slot">
+                    <label for="appointmentTime">Select Time (6:00 AM - 11:00 PM):</label>
+                    <select id="appointmentTime" name="appointmentTime" required>
+                        <option value="">Choose a time</option>
+                        <option value="06:00">6:00 AM</option>
+                        <option value="07:00">7:00 AM</option>
+                        <option value="08:00">8:00 AM</option>
+                        <option value="09:00">9:00 AM</option>
+                        <option value="10:00">10:00 AM</option>
+                        <option value="11:00">11:00 AM</option>
+                        <option value="12:00">12:00 PM</option>
+                        <option value="13:00">1:00 PM</option>
+                        <option value="14:00">2:00 PM</option>
+                        <option value="15:00">3:00 PM</option>
+                        <option value="16:00">4:00 PM</option>
+                        <option value="17:00">5:00 PM</option>
+                        <option value="18:00">6:00 PM</option>
+                        <option value="19:00">7:00 PM</option>
+                        <option value="20:00">8:00 PM</option>
+                        <option value="21:00">9:00 PM</option>
+                        <option value="22:00">10:00 PM</option>
+                        <option value="23:00">11:00 PM</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="address">Your Hyderabad Address:</label>
+                    <textarea id="address" name="address" placeholder="Your Hyderabad Address" rows="4" required></textarea>
+                </div>
+                <button type="submit">Book Now</button>
+            </form>
+        </section>
+        <section id="contact">
+            <h2>Contact Us</h2>
+            <p>Book or inquire directly:</p>
+            <p><strong>Phone:</strong> [Your Phone Number, e.g., +91 123-456-7890]</p>
+            <p><strong>Email:</strong> [Your Email, e.g., you@example.com]</p>
+        </section>
     </div>
+    <footer>
+        <p>© 2025 Mobile Hair Care Hyderabad. All rights reserved.</p>
+        <p>Follow us: <a href="[Your YouTube Link]">YouTube</a> | <a href="[Your Instagram Link]">Instagram</a></p>
+    </footer>
 
-    <form id="appointmentForm">
-        <div class="form-group">
-            <label for="name">Name:</label>
-            <input type="text" id="name" name="name" required>
-        </div>
-        <div class="form-group">
-            <label for="address">Address:</label>
-            <input type="text" id="address" name="address" required>
-        </div>
-        <div class="form-group">
-            <label for="phone">Phone Number:</label>
-            <input type="tel" id="phone" name="phone" required>
-        </div>
-        <div class="form-group">
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" required>
-        </div>
-        <div class="form-group">
-            <label for="service">Select Service:</label>
-            <select id="service" name="service" required>
-                <option value="">Choose a service</option>
-                <option value="hair oil">Hair Oil</option>
-                <option value="head massage">Head Massage</option>
-                <option value="total hair detox">Total Hair Detox</option>
-            </select>
-        </div>
-        <button type="submit">Submit Appointment</button>
-    </form>
-
-    <p>Submitted data will be stored and accessible via a database (to be set up later).</p>
+    <script type="module">
+        // Import Firebase SDKs
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    
+        // Your Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCeuaUdUQO3TEJplfl5q24O8Zb01Rwtw6E",
+            authDomain: "hcaw-af26e.firebaseapp.com",
+            projectId: "hcaw-af26e",
+            storageBucket: "hcaw-af26e.firebasestorage.app",
+            messagingSenderId: "882275854718",
+            appId: "1:882275854718:web:135016785a06cd1b6feb2f",
+            measurementId: "G-8Z07DLMR0E"
+        };
+    
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+        const provider = new GoogleAuthProvider();
+        provider.addScope('profile');
+        provider.addScope('email');
+    
+        // Authentication handling
+        const googleSignInBtn = document.getElementById('googleSignInBtn');
+        const userStatus = document.getElementById('userStatus');
+        const bookingForm = document.getElementById('booking-form');
+    
+        googleSignInBtn.addEventListener('click', () => {
+            console.log("Attempting to sign in with Google...");
+            signInWithPopup(auth Creation of the new file , provider)
+                .then((result) => {
+                    const user = result.user;
+                    console.log("Signed in with Google:", user);
+                    console.log("User email:", user.email);
+                    console.log("User displayName:", user.displayName);
+                })
+                .catch((error) => {
+                    console.error("Google Sign-In error:", error.code, error.message);
+                    alert('Error signing in with Google: ' + error.message);
+                });
+        });
+    
+        onAuthStateChanged(auth, (user) => {
+            console.log("Auth state changed:", user);
+            if (user) {
+                // Use email if available, otherwise fall back to displayName or a generic message
+                const displayName = user.email || user.displayName || "User";
+                userStatus.textContent = `Signed in as ${displayName}`;
+                googleSignInBtn.style.display = 'none';
+                bookingForm.style.display = 'block';
+            } else {
+                userStatus.textContent = 'Not signed in';
+                googleSignInBtn.style.display = 'block';
+                bookingForm.style.display = 'none';
+            }
+        });
+    
+        const dateInput = document.getElementById('appointmentDate');
+        const timeSlot = document.getElementById('time-slot');
+        const today = new Date().toISOString().split('T')[0];
+    
+        // Set minimum date to tomorrow
+        dateInput.min = today;
+    
+        // Show time slots only when a future date is selected
+        dateInput.addEventListener('change', function() {
+            if (this.value && this.value >= today) {
+                timeSlot.style.display = 'block';
+            } else {
+                timeSlot.style.display = 'none';
+            }
+        });
+    
+        // Handle form submission
+        document.getElementById('booking-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+    
+            const user = auth.currentUser;
+            if (!user) {
+                alert('Please sign in to book an appointment.');
+                return;
+            }
+    
+            const appointmentData = {
+                name: document.getElementById('name').value,
+                address: document.getElementById('address').value,
+                phone: document.getElementById('phone').value,
+                email: user.email || "Not provided",
+                service: document.getElementById('service').value,
+                date: document.getElementById('appointmentDate').value,
+                time: document.getElementById('appointmentTime').value,
+                timestamp: new Date(),
+                userId: user.uid
+            };
+    
+            try {
+                console.log("Submitting appointment:", appointmentData);
+                await addDoc(collection(db, 'appointments'), appointmentData);
+                alert('Appointment booked successfully!');
+                document.getElementById('booking-form').reset();
+                timeSlot.style.display = 'none';
+            } catch (error) {
+                console.error("Submission error:", error);
+                alert('Error booking appointment: ' + error.message);
+            }
+        });
+    </script>
 </body>
 </html>

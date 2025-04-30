@@ -15,7 +15,7 @@
         #time-slot { display: none; margin-top: 10px; }
         #auth-section { margin-bottom: 20px; }
         textarea { width: 100%; padding: 8px; box-sizing: border-box; }
-        button#googleSignInBtn { background-color: #4285f4; color: white; border: none; cursor: pointer; }
+        button#googleSignInBtn { background-color: #4285f4; color: white; border: none; cursor: pointer; width: auto; padding: 5px 10px; }
         button#googleSignInBtn:hover { background-color: #357abd; }
 
         /* Style for the Sign-Out button */
@@ -24,14 +24,12 @@
             color: white;
             border: none;
             cursor: pointer;
-            padding: 5px 10px; /* Smaller padding */
+            padding: 4px 8px; /* Small padding for less than an inch */
             font-size: 12px; /* Smaller text */
             border-radius: 3px; /* Rounded corners */
-            position: fixed; /* Fixed position */
-            top: 10px; /* 10px from top */
-            right: 10px; /* 10px from right */
+            width: auto; /* Allow natural width */
+            margin-left: 10px; /* Space from Sign-In button */
             display: none; /* Hidden by default */
-            z-index: 1000; /* Ensure it stays above other content */
         }
         #signOutBtn:hover {
             background-color: #5a6268; /* Slightly darker on hover */

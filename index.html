@@ -98,6 +98,27 @@
             </div>
             <form id="booking-form">
                 <div class="form-group">
+                    <label for="name">Your Name:</label>
+                    <input type="text" id="name" name="name" placeholder="Your Name" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Your Email:</label>
+                    <input type="email" id="email" name="email" placeholder="Your Email" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="phone">Your Phone Number:</label>
+                    <input type="tel" id="phone" name="phone" placeholder="Your Phone Number" required>
+                </div>
+                <div class="form-group">
+                    <label for="service">Select Service:</label>
+                    <select id="service" name="service" required>
+                        <option value="" disabled selected>Select Service</option>
+                        <option value="Hair Massage">Head/Hair(oil) Massage</option>
+                        <option value="Hair Wash">Hair Saloon Finishing</option>
+                        <option value="Hair Oil Application">Complete Hair Nourishment</option>
+                    </select>
+                </div>
+                <div class="form-group">
                     <label for="appointmentDate">Select Date:</label>
                     <select id="dateSelect" name="appointmentDate" required>
                         <option value="" selected disabled>Select Date</option>

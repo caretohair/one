@@ -73,6 +73,7 @@ onAuthStateChanged(auth, (user) => {
     }
 });
 
+const dateSelect = document.getElementById('dateSelect');
 const dateInput = document.getElementById('appointmentDate');
 const timeSlot = document.getElementById('time-slot');
 const timeInput = document.getElementById('appointmentTime');
@@ -92,57 +93,79 @@ const today = nowIST.toISOString().split('T')[0];
 // Set minimum date to today
 dateInput.min = today;
 
-// Function to update available time slots based on the selected date
-function updateTimeSlots() {
-    const selectedDate = dateInput.value;
+// Function to update date and time slots
+function updateDateAndTimeSlots() {
+    const selectedValue = dateSelect.value;
     const now = getCurrentTimeInIST();
     const currentHour = now.getHours();
     const currentMinutes = now.getMinutes();
 
-    // Calculate the earliest allowed hour (at least 1 hour from now, rounded to the next slot)
-    let earliestHour = currentHour + 1;
-    if (currentMinutes > 0) {
-        earliestHour += 1; // Round up to the next hour if there are any minutes
-    }
-    if (earliestHour > 23) {
-        earliestHour = 6; // If past 11:00 PM, start at 6:00 AM the next day
-        const nextDay = new Date(now);
-        nextDay.setDate(now.getDate() + 1);
-        dateInput.min = nextDay.toISOString().split('T')[0];
-    }
-
-    // Show time slots only when a valid date is selected
-    if (selectedDate && selectedDate >= today) {
-        timeSlot.style.display = 'block';
-
-        // Get all time options
-        const timeOptions = timeInput.options;
-        for (let i = 0; i < timeOptions.length; i++) {
-            const option = timeOptions[i];
-            const optionValue = option.value;
-            if (!optionValue) continue; // Skip "Choose a time" option
-            const optionHour = parseInt(optionValue.split(':')[0]);
-
-            // If the selected date is today, disable slots before the earliest allowed hour
-            if (selectedDate === today && optionHour < earliestHour) {
-                option.disabled = true;
-            } else {
-                option.disabled = false;
-            }
+    // Handle dropdown selection
+    if (selectedValue === 'today' || selectedValue === 'tomorrow' || selectedValue === 'calendar') {
+        let selectedDate;
+        if (selectedValue === 'today') {
+            selectedDate = today;
+        } else if (selectedValue === 'tomorrow') {
+            const tomorrow = new Date(nowIST);
+            tomorrow.setDate(nowIST.getDate() + 1);
+            selectedDate = tomorrow.toISOString().split('T')[0];
+        } else if (selectedValue === 'calendar') {
+            dateInput.style.display = 'block';
+            dateInput.focus();
+            return; // Let the calendar handle the selection
         }
 
-        // Ensure the "Choose a time" option is always enabled
-        timeOptions[0].disabled = false;
-    } else {
-        timeSlot.style.display = 'none';
+        // Update the hidden input with the selected date
+        dateInput.value = selectedDate;
+        dateInput.style.display = 'none';
+
+        // Calculate the earliest allowed hour (at least 1 hour from now, rounded to the next slot)
+        let earliestHour = currentHour + 1;
+        if (currentMinutes > 0) {
+            earliestHour += 1; // Round up to the next hour if there are any minutes
+        }
+        if (earliestHour > 23) {
+            earliestHour = 6; // If past 11:00 PM, start at 6:00 AM the next day
+            const nextDay = new Date(now);
+            nextDay.setDate(now.getDate() + 1);
+            dateInput.min = nextDay.toISOString().split('T')[0];
+        }
+
+        // Show time slots and update them
+        if (selectedDate && selectedDate >= today) {
+            timeSlot.style.display = 'block';
+
+            const timeOptions = timeInput.options;
+            for (let i = 0; i < timeOptions.length; i++) {
+                const option = timeOptions[i];
+                const optionValue = option.value;
+                if (!optionValue) continue; // Skip "Choose a time" option
+                const optionHour = parseInt(optionValue.split(':')[0]);
+
+                if (selectedDate === today && optionHour < earliestHour) {
+                    option.disabled = true;
+                } else {
+                    option.disabled = false;
+                }
+            }
+            timeOptions[0].disabled = false; // Ensure "Choose a time" is enabled
+        } else {
+            timeSlot.style.display = 'none';
+        }
     }
 }
 
-// Update time slots when the date changes
-dateInput.addEventListener('change', updateTimeSlots);
+// Handle dropdown change
+dateSelect.addEventListener('change', updateDateAndTimeSlots);
 
-// Initial update to set correct time slots if a date is pre-selected
-updateTimeSlots();
+// Handle calendar input change (if user selects a date from the calendar)
+dateInput.addEventListener('change', () => {
+    dateInput.style.display = 'none';
+    updateDateAndTimeSlots();
+});
+
+// Initial update
+updateDateAndTimeSlots();
 
 // Handle form submission with validation
 document.getElementById('booking-form').addEventListener('submit', async (e) => {
@@ -190,9 +213,9 @@ document.getElementById('booking-form').addEventListener('submit', async (e) => 
         document.getElementById('booking-form').reset();
         timeSlot.style.display = 'none';
         emailInput.value = user.email || "Not provided";
-        updateTimeSlots(); // Reset time slots after submission
+        updateDateAndTimeSlots(); // Reset date and time slots after submission
     } catch (error) {
-        console.error("Submission error:", הק);
+        console.error("Submission error:", error);
         alert('Error booking appointment: ' + error.message);
     }
 });

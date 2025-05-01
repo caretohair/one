@@ -76,7 +76,18 @@ onAuthStateChanged(auth, (user) => {
 const dateInput = document.getElementById('appointmentDate');
 const timeSlot = document.getElementById('time-slot');
 const timeInput = document.getElementById('appointmentTime');
-const today = new Date().toISOString().split('T')[0];
+
+// Function to get current time in IST (UTC+5:30)
+function getCurrentTimeInIST() {
+    const now = new Date();
+    const offsetIST = 5.5 * 60; // IST is UTC+5:30 (5.5 hours ahead of UTC)
+    const utc = now.getTime() + (now.getTimezoneOffset() * 60 * 1000);
+    return new Date(utc + (offsetIST * 60 * 1000));
+}
+
+// Get today's date in YYYY-MM-DD format in IST
+const nowIST = getCurrentTimeInIST();
+const today = nowIST.toISOString().split('T')[0];
 
 // Set minimum date to today
 dateInput.min = today;
@@ -84,7 +95,7 @@ dateInput.min = today;
 // Function to update available time slots based on the selected date
 function updateTimeSlots() {
     const selectedDate = dateInput.value;
-    const now = new Date();
+    const now = getCurrentTimeInIST();
     const currentHour = now.getHours();
     const currentMinutes = now.getMinutes();
 
@@ -95,7 +106,9 @@ function updateTimeSlots() {
     }
     if (earliestHour > 23) {
         earliestHour = 6; // If past 11:00 PM, start at 6:00 AM the next day
-        dateInput.min = new Date(now.setDate(now.getDate() + 1)).toISOString().split('T')[0];
+        const nextDay = new Date(now);
+        nextDay.setDate(now.getDate() + 1);
+        dateInput.min = nextDay.toISOString().split('T')[0];
     }
 
     // Show time slots only when a valid date is selected
@@ -106,7 +119,9 @@ function updateTimeSlots() {
         const timeOptions = timeInput.options;
         for (let i = 0; i < timeOptions.length; i++) {
             const option = timeOptions[i];
-            const optionHour = parseInt(option.value.split(':')[0]);
+            const optionValue = option.value;
+            if (!optionValue) continue; // Skip "Choose a time" option
+            const optionHour = parseInt(optionValue.split(':')[0]);
 
             // If the selected date is today, disable slots before the earliest allowed hour
             if (selectedDate === today && optionHour < earliestHour) {
@@ -142,12 +157,16 @@ document.getElementById('booking-form').addEventListener('submit', async (e) => 
     const selectedDate = dateInput.value;
     const selectedTime = timeInput.value;
 
-    // Validate that the selected date and time are at least 1 hour in the future
-    const now = new Date();
-    const selectedDateTime = new Date(`${selectedDate}T${selectedTime}:00`);
+    // Validate that the selected date and time are at least 1 hour in the future (in IST)
+    const now = getCurrentTimeInIST();
+    const selectedDateTime = new Date(`${selectedDate}T${selectedTime}:00+05:30`); // Force IST timezone
     const minAllowedTime = new Date(now.getTime() + 60 * 60 * 1000); // 1 hour from now
 
-    if (selectedDateTime < minAllowedTime) {
+    console.log("Current time (IST):", now.toISOString());
+    console.log("Selected date/time (IST):", selectedDateTime.toISOString());
+    console.log("Minimum allowed time (IST):", minAllowedTime.toISOString());
+
+    if (selectedDateTime <= minAllowedTime) {
         alert('Booking must be at least 1 hour from the current time. Please select a later time.');
         return;
     }
@@ -173,7 +192,7 @@ document.getElementById('booking-form').addEventListener('submit', async (e) => 
         emailInput.value = user.email || "Not provided";
         updateTimeSlots(); // Reset time slots after submission
     } catch (error) {
-        console.error("Submission error:", error);
+        console.error("Submission error:", הק);
         alert('Error booking appointment: ' + error.message);
     }
 });

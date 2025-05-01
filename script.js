@@ -75,21 +75,61 @@ onAuthStateChanged(auth, (user) => {
 
 const dateInput = document.getElementById('appointmentDate');
 const timeSlot = document.getElementById('time-slot');
+const timeInput = document.getElementById('appointmentTime');
 const today = new Date().toISOString().split('T')[0];
 
-// Set minimum date to tomorrow
+// Set minimum date to today
 dateInput.min = today;
 
-// Show time slots only when a future date is selected
-dateInput.addEventListener('change', function() {
-    if (this.value && this.value >= today) {
+// Function to update available time slots based on the selected date
+function updateTimeSlots() {
+    const selectedDate = dateInput.value;
+    const now = new Date();
+    const currentHour = now.getHours();
+    const currentMinutes = now.getMinutes();
+
+    // Calculate the earliest allowed hour (at least 1 hour from now, rounded to the next slot)
+    let earliestHour = currentHour + 1;
+    if (currentMinutes > 0) {
+        earliestHour += 1; // Round up to the next hour if there are any minutes
+    }
+    if (earliestHour > 23) {
+        earliestHour = 6; // If past 11:00 PM, start at 6:00 AM the next day
+        dateInput.min = new Date(now.setDate(now.getDate() + 1)).toISOString().split('T')[0];
+    }
+
+    // Show time slots only when a valid date is selected
+    if (selectedDate && selectedDate >= today) {
         timeSlot.style.display = 'block';
+
+        // Get all time options
+        const timeOptions = timeInput.options;
+        for (let i = 0; i < timeOptions.length; i++) {
+            const option = timeOptions[i];
+            const optionHour = parseInt(option.value.split(':')[0]);
+
+            // If the selected date is today, disable slots before the earliest allowed hour
+            if (selectedDate === today && optionHour < earliestHour) {
+                option.disabled = true;
+            } else {
+                option.disabled = false;
+            }
+        }
+
+        // Ensure the "Choose a time" option is always enabled
+        timeOptions[0].disabled = false;
     } else {
         timeSlot.style.display = 'none';
     }
-});
+}
 
-// Handle form submission
+// Update time slots when the date changes
+dateInput.addEventListener('change', updateTimeSlots);
+
+// Initial update to set correct time slots if a date is pre-selected
+updateTimeSlots();
+
+// Handle form submission with validation
 document.getElementById('booking-form').addEventListener('submit', async (e) => {
     e.preventDefault();
 
@@ -99,14 +139,27 @@ document.getElementById('booking-form').addEventListener('submit', async (e) => 
         return;
     }
 
+    const selectedDate = dateInput.value;
+    const selectedTime = timeInput.value;
+
+    // Validate that the selected date and time are at least 1 hour in the future
+    const now = new Date();
+    const selectedDateTime = new Date(`${selectedDate}T${selectedTime}:00`);
+    const minAllowedTime = new Date(now.getTime() + 60 * 60 * 1000); // 1 hour from now
+
+    if (selectedDateTime < minAllowedTime) {
+        alert('Booking must be at least 1 hour from the current time. Please select a later time.');
+        return;
+    }
+
     const appointmentData = {
         name: document.getElementById('name').value,
         address: document.getElementById('address').value,
         phone: document.getElementById('phone').value,
         email: user.email || "Not provided",
         service: document.getElementById('service').value,
-        date: document.getElementById('appointmentDate').value,
-        time: document.getElementById('appointmentTime').value,
+        date: selectedDate,
+        time: selectedTime,
         timestamp: new Date(),
         userId: user.uid
     };
@@ -118,6 +171,7 @@ document.getElementById('booking-form').addEventListener('submit', async (e) => 
         document.getElementById('booking-form').reset();
         timeSlot.style.display = 'none';
         emailInput.value = user.email || "Not provided";
+        updateTimeSlots(); // Reset time slots after submission
     } catch (error) {
         console.error("Submission error:", error);
         alert('Error booking appointment: ' + error.message);
